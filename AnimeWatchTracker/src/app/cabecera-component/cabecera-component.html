@@ -1,0 +1,14 @@
+<header class="header">
+  <nav class="nav">
+    <div class="logo">
+      <img src="/imagen angular.png" alt="AnimeWatch Tracker">
+      <span class="logo-text">AnimeWatch Tracker</span>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+      <a routerLink="/mi-lista" routerLinkActive="active">Mi Lista</a>
+      <a routerLink="/Buscador" routerLinkActive="active">Buscador</a>
+    </div>
+    <button class="tema" (click)="cambiarTema()">{{ getThemeButtonText() }}</button>
+  </nav>
+</header>

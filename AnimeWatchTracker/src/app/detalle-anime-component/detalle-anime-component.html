@@ -1,0 +1,147 @@
+@if (loading()) {
+  <div class="loading-container">
+    <p>Cargando anime...</p>
+  </div>
+}
+
+@if (error() && !loading()) {
+  <div class="error-container">
+    <p>{{ error() }}</p>
+    <a routerLink="/" class="back-button">Volver al inicio</a>
+  </div>
+}
+
+@if (anime() && !loading()) {
+  <div class="detalle-container">
+    <div class="anime-header">
+      <div class="anime-poster">
+        <img [src]="anime()!.images.jpg.large_image_url" [alt]="anime()!.title" />
+      </div>
+      
+      <div class="anime-main-info">
+        <h1>{{ anime()!.title }}</h1>
+        
+        @if (anime()!.title_english) {
+          <h2 class="title-english">{{ anime()!.title_english }}</h2>
+        }
+        
+        <div class="info-badges">
+          <span class="badge type">{{ anime()!.type }}</span>
+          <span class="badge status" [class.airing]="anime()!.airing">
+            {{ anime()!.status }}
+          </span>
+          <span class="badge score">⭐ {{ anime()!.score || 'N/A' }}</span>
+          @if (anime()!.episodes) {
+            <span class="badge episodes">{{ anime()!.episodes }} episodios</span>
+          }
+        </div>
+
+        <div class="genres">
+          @for (genre of anime()!.genres; track genre.mal_id) {
+            <span class="genre-tag">{{ genre.name }}</span>
+          }
+        </div>
+
+        <div class="synopsis">
+          <h3>Sinopsis</h3>
+          <p>{{ anime()!.synopsis || 'No hay sinopsis disponible' }}</p>
+        </div>
+
+        <div class="list-actions">
+          @if (!isInList()) {
+            <div class="add-to-list">
+              <select (change)="onStatusChange($event)" [value]="selectedStatus()">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Viendo">Viendo</option>
+                <option value="Completado">Completado</option>
+                <option value="Abandonado">Abandonado</option>
+              </select>
+              <button (click)="addToList()" class="btn-primary">Añadir a Mi Lista</button>
+            </div>
+          } @else {
+            <div class="manage-list">
+              <select (change)="onStatusChange($event)" [value]="selectedStatus()">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Viendo">Viendo</option>
+                <option value="Completado">Completado</option>
+                <option value="Abandonado">Abandonado</option>
+              </select>
+              
+              <button (click)="toggleFavorite()" 
+                      [class.favorite]="isFavorite()"
+                      class="btn-favorite">
+                {{ isFavorite() ? '❤️ Favorito' : '🤍 Marcar favorito' }}
+              </button>
+              
+              <button (click)="removeFromList()" class="btn-danger">Eliminar de lista</button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="anime-details">
+      <div class="episodes-section">
+        <h3>Episodios</h3>
+        
+        @if (loadingEpisodes()) {
+          <p class="loading-text">Cargando episodios...</p>
+        }
+        
+        @if (episodes().length > 0 && !loadingEpisodes()) {
+          <div class="episodes-list">
+            @for (episode of episodes(); track episode.mal_id) {
+              <div class="episode-item">
+                <span class="episode-number">Ep. {{ episode.mal_id }}</span>
+                <div class="episode-info">
+                  <h4>{{ episode.title }}</h4>
+                  @if (episode.aired) {
+                    <span class="episode-date">{{ episode.aired }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+        
+        @if (episodes().length === 0 && !loadingEpisodes()) {
+          <p class="no-data">No hay episodios disponibles</p>
+        }
+      </div>
+
+      <div class="reviews-section">
+        <h3>Reseñas</h3>
+        
+        @if (loadingReviews()) {
+          <p class="loading-text">Cargando reseñas...</p>
+        }
+        
+        @if (reviews().length > 0 && !loadingReviews()) {
+          <div class="reviews-list">
+            @for (review of reviews(); track review.mal_id) {
+              <div class="review-item">
+                <div class="review-header">
+                  <div class="review-user">
+                    <img [src]="review.user.images.jpg.image_url" [alt]="review.user.username" />
+                    <span>{{ review.user.username }}</span>
+                  </div>
+                  <span class="review-score">⭐ {{ review.score }}/10</span>
+                </div>
+                <p class="review-text">{{ truncateText(review.review, 300) }}</p>
+                <a [href]="review.url" target="_blank" class="review-link">Leer más</a>
+              </div>
+            }
+          </div>
+        }
+        
+        @if (reviews().length === 0 && !loadingReviews()) {
+          <p class="no-data">No hay reseñas disponibles</p>
+        }
+      </div>
+    </div>
+
+    <div class="back-link">
+      <a routerLink="/">← Volver al buscador</a>
+    </div>
+  </div>
+}

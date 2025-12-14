@@ -1,0 +1,70 @@
+<div class="inicio-container">
+  <div class="hero">
+    <h1>AnimeWatch Tracker</h1>
+    <p class="subtitle">Tu hub de animes personalizado</p>
+    <p class="description">Descubre, guarda y sigue tus animes favoritos en tiempo real</p>
+  </div>
+
+  <div class="search-section">
+    <h2>Buscar Anime</h2>
+    <div class="search-box">
+      <input 
+        type="text" 
+        [value]="searchQuery()"
+        (input)="updateQuery($event)"
+        (keyup.enter)="onSearch()"
+        placeholder="Ej: Naruto, One Piece, Attack on Titan..."
+        class="search-input"
+      />
+      <button (click)="onSearch()" class="search-button">Buscar</button>
+      @if (searched()) {
+        <button (click)="clearSearch()" class="clear-button">Limpiar</button>
+      }
+    </div>
+  </div>
+
+  <div class="content-section">
+    <div class="header-info">
+      @if (!searched()) {
+        <h2>Animes en Emisión</h2>
+        <p class="subtitle-section">Los animes más populares que están actualmente en emisión</p>
+      } @else {
+        <h2>Resultados de búsqueda</h2>
+        <p class="subtitle-section">{{ animes().length }} animes encontrados</p>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="loading">
+        <p>Cargando animes...</p>
+      </div>
+    }
+
+    @if (error() && !loading()) {
+      <div class="error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+
+    @if (animes().length > 0 && !loading()) {
+      <div class="anime-grid">
+        @for (anime of animes(); track anime.mal_id) {
+          <a [routerLink]="['/anime', anime.mal_id]" class="anime-card">
+            <img 
+              [src]="anime.images.jpg.large_image_url" 
+              [alt]="anime.title"
+              class="anime-image"
+            />
+            <div class="anime-info">
+              <h4 class="anime-title">{{ anime.title }}</h4>
+              <div class="anime-meta">
+                <span class="score">⭐ {{ anime.score || 'N/A' }}</span>
+                <span class="type">{{ anime.type }}</span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </div>
+</div>
