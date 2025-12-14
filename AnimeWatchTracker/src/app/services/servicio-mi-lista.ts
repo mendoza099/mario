@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Anime, AnimeEnLista, EstadoAnime } from '../models/anime.model';
+import { Anime, AnimeEnLista, EstadoAnime } from '../models/modelo-anime';
 
 @Injectable({
   providedIn: 'root'

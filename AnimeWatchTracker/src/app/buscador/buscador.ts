@@ -1,14 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ServicioAnime } from '../services/anime.service';
-import { Anime } from '../models/anime.model';
+import { ServicioAnime } from '../services/servicio-anime';
+import { Anime } from '../models/modelo-anime';
 
 @Component({
   selector: 'app-buscador',
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './buscador-component.html',
-  styleUrl: './buscador-component.css',
+  templateUrl: './buscador.html',
+  styleUrl: './buscador.css',
 })
 export class Buscador {
   private fb = inject(FormBuilder);

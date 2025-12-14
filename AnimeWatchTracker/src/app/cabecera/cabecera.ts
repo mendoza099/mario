@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { ServicioTema } from '../services/theme.service';
+import { ServicioTema } from '../services/servicio-tema';
 
 @Component({
   selector: 'app-cabecera',
   imports: [RouterLink, RouterLinkActive],
-  templateUrl: './cabecera-component.html',
-  styleUrl: './cabecera-component.css',
+  templateUrl: './cabecera.html',
+  styleUrl: './cabecera.css',
 })
 export class Cabecera {
   servicioTema = inject(ServicioTema);

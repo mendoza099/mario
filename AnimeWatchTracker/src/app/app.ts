@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Cabecera } from './cabecera-component/cabecera-component';
+import { Cabecera } from './cabecera/cabecera';
 
 @Component({
   selector: 'app-root',

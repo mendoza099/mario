@@ -1,15 +1,15 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ServicioMiLista } from '../services/my-list.service';
-import { AnimeEnLista, EstadoAnime } from '../models/anime.model';
+import { ServicioMiLista } from '../services/servicio-mi-lista';
+import { AnimeEnLista, EstadoAnime } from '../models/modelo-anime';
 
 type TipoFiltro = 'Todos' | 'Favoritos' | 'Pendiente' | 'Viendo' | 'Completado' | 'Abandonado';
 
 @Component({
   selector: 'app-mi-lista',
   imports: [RouterLink],
-  templateUrl: './mi-lista-component.html',
-  styleUrl: './mi-lista-component.css',
+  templateUrl: './mi-lista.html',
+  styleUrl: './mi-lista.css',
 })
 export class MiLista {
   servicioMiLista = inject(ServicioMiLista);

@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Inicio } from './inicio-component/inicio-component';
-import { MiLista } from './mi-lista-component/mi-lista-component';
-import { Buscador } from './buscador-component/buscador-component';
-import { DetalleAnime } from './detalle-anime-component/detalle-anime-component';
+import { Inicio } from './inicio/inicio';
+import { MiLista } from './mi-lista/mi-lista';
+import { Buscador } from './buscador/buscador';
+import { DetalleAnime } from './detalle-anime/detalle-anime';
 
 export const routes: Routes = [
     { path: '', component: Inicio },

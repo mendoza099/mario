@@ -2,15 +2,15 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ServicioAnime } from '../services/anime.service';
-import { ServicioMiLista } from '../services/my-list.service';
-import { DetalleAnime as DetalleAnimeModelo, Episodio, Resena, EstadoAnime } from '../models/anime.model';
+import { ServicioAnime } from '../services/servicio-anime';
+import { ServicioMiLista } from '../services/servicio-mi-lista';
+import { DetalleAnime as DetalleAnimeModelo, Episodio, Resena, EstadoAnime } from '../models/modelo-anime';
 
 @Component({
   selector: 'app-detalle-anime',
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './detalle-anime-component.html',
-  styleUrl: './detalle-anime-component.css',
+  templateUrl: './detalle-anime.html',
+  styleUrl: './detalle-anime.css',
 })
 export class DetalleAnime implements OnInit {
   private ruta = inject(ActivatedRoute);

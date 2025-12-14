@@ -1,14 +1,14 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ServicioAnime } from '../services/anime.service';
-import { Anime } from '../models/anime.model';
+import { ServicioAnime } from '../services/servicio-anime';
+import { Anime } from '../models/modelo-anime';
 
 @Component({
   selector: 'app-inicio',
   imports: [RouterLink, FormsModule],
-  templateUrl: './inicio-component.html',
-  styleUrl: './inicio-component.css',
+  templateUrl: './inicio.html',
+  styleUrl: './inicio.css',
 })
 export class Inicio implements OnInit {
   private servicioAnime = inject(ServicioAnime);

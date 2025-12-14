@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, delay } from 'rxjs';
-import { Anime, DetalleAnime, Episodio, Resena, RespuestaJikan } from '../models/anime.model';
+import { Anime, DetalleAnime, Episodio, Resena, RespuestaJikan } from '../models/modelo-anime';
 
 @Injectable({
   providedIn: 'root'
