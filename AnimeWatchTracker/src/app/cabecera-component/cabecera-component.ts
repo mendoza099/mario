@@ -1,21 +1,21 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { ThemeService } from '../services/theme.service';
+import { ServicioTema } from '../services/theme.service';
 
 @Component({
-  selector: 'app-cabecera-component',
+  selector: 'app-cabecera',
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './cabecera-component.html',
   styleUrl: './cabecera-component.css',
 })
-export class CabeceraComponent {
-  themeService = inject(ThemeService);
+export class Cabecera {
+  servicioTema = inject(ServicioTema);
 
   cambiarTema(): void {
-    this.themeService.toggleTheme();
+    this.servicioTema.cambiarTema();
   }
 
-  getThemeButtonText(): string {
-    return this.themeService.isDarkMode() ? '☀️ Claro' : '🌙 Oscuro';
+  obtenerTextoBotonTema(): string {
+    return this.servicioTema.modoOscuro() ? '☀️ Claro' : '🌙 Oscuro';
   }
 }

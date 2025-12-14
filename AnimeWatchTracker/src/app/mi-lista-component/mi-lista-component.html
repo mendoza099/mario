@@ -2,38 +2,38 @@
   <h1>Mi Lista de Animes</h1>
 
   <div class="stats-grid">
-    <div class="stat-card" [class.active]="activeFilter() === 'Todos'" (click)="setFilter('Todos')">
-      <div class="stat-number">{{ stats().total }}</div>
+    <div class="stat-card" [class.active]="filtroActivo() === 'Todos'" (click)="cambiarFiltro('Todos')">
+      <div class="stat-number">{{ estadisticas().total }}</div>
       <div class="stat-label">Total</div>
     </div>
     
-    <div class="stat-card" [class.active]="activeFilter() === 'Favoritos'" (click)="setFilter('Favoritos')">
-      <div class="stat-number">{{ stats().favoritos }}</div>
+    <div class="stat-card" [class.active]="filtroActivo() === 'Favoritos'" (click)="cambiarFiltro('Favoritos')">
+      <div class="stat-number">{{ estadisticas().favoritos }}</div>
       <div class="stat-label">❤️ Favoritos</div>
     </div>
     
-    <div class="stat-card" [class.active]="activeFilter() === 'Pendiente'" (click)="setFilter('Pendiente')">
-      <div class="stat-number">{{ stats().pendiente }}</div>
+    <div class="stat-card" [class.active]="filtroActivo() === 'Pendiente'" (click)="cambiarFiltro('Pendiente')">
+      <div class="stat-number">{{ estadisticas().pendiente }}</div>
       <div class="stat-label">Pendiente</div>
     </div>
     
-    <div class="stat-card" [class.active]="activeFilter() === 'Viendo'" (click)="setFilter('Viendo')">
-      <div class="stat-number">{{ stats().viendo }}</div>
+    <div class="stat-card" [class.active]="filtroActivo() === 'Viendo'" (click)="cambiarFiltro('Viendo')">
+      <div class="stat-number">{{ estadisticas().viendo }}</div>
       <div class="stat-label">Viendo</div>
     </div>
     
-    <div class="stat-card" [class.active]="activeFilter() === 'Completado'" (click)="setFilter('Completado')">
-      <div class="stat-number">{{ stats().completado }}</div>
+    <div class="stat-card" [class.active]="filtroActivo() === 'Completado'" (click)="cambiarFiltro('Completado')">
+      <div class="stat-number">{{ estadisticas().completado }}</div>
       <div class="stat-label">Completado</div>
     </div>
     
-    <div class="stat-card" [class.active]="activeFilter() === 'Abandonado'" (click)="setFilter('Abandonado')">
-      <div class="stat-number">{{ stats().abandonado }}</div>
+    <div class="stat-card" [class.active]="filtroActivo() === 'Abandonado'" (click)="cambiarFiltro('Abandonado')">
+      <div class="stat-number">{{ estadisticas().abandonado }}</div>
       <div class="stat-label">Abandonado</div>
     </div>
   </div>
 
-  @if (filteredList().length === 0) {
+  @if (listaFiltrada().length === 0) {
     <div class="empty-state">
       <h2>Tu lista está vacía</h2>
       <p>Comienza a explorar y añade animes a tu lista personal</p>
@@ -41,47 +41,44 @@
     </div>
   } @else {
     <div class="filter-info">
-      <h2>{{ activeFilter() }} ({{ filteredList().length }})</h2>
+      <h2>{{ filtroActivo() }} ({{ listaFiltrada().length }})</h2>
     </div>
 
     <div class="anime-grid">
-      @for (item of filteredList(); track item.anime.mal_id) {
+      @for (anime of listaFiltrada(); track anime.anime.mal_id) {
         <div class="anime-card">
-          <a [routerLink]="['/anime', item.anime.mal_id]" class="anime-link">
+          <a [routerLink]="['/anime', anime.anime.mal_id]" class="anime-link">
             <img 
-              [src]="item.anime.images.jpg.large_image_url" 
-              [alt]="item.anime.title"
+              [src]="anime.anime.images.jpg.large_image_url" 
+              [alt]="anime.anime.title"
               class="anime-image"
             />
             <div class="anime-overlay">
-              <span class="status-badge" [attr.data-status]="item.status">
-                {{ item.status }}
+              <span class="status-badge" [attr.data-status]="anime.estado">
+                {{ anime.estado }}
               </span>
             </div>
           </a>
           
           <div class="anime-info">
-            <h3>{{ item.anime.title }}</h3>
+            <h3>{{ anime.anime.title }}</h3>
             
             <div class="anime-meta">
-              <span class="score">⭐ {{ item.anime.score || 'N/A' }}</span>
-              @if (item.personalScore) {
-                <span class="personal-score">Tu nota: {{ item.personalScore }}</span>
-              }
+              <span class="score">⭐ {{ anime.anime.score || 'N/A' }}</span>
             </div>
 
             <div class="anime-actions">
               <button 
-                (click)="toggleFavorite(item.anime.mal_id)"
-                [class.favorite]="item.isFavorite"
+                (click)="cambiarFavorito(anime.anime.mal_id)"
+                [class.favorite]="anime.esFavorito"
                 class="btn-favorite-small"
                 title="Marcar como favorito"
               >
-                {{ item.isFavorite ? '❤️' : '🤍' }}
+                {{ anime.esFavorito ? '❤️' : '🤍' }}
               </button>
               
               <button 
-                (click)="removeAnime(item.anime.mal_id)"
+                (click)="eliminarAnime(anime.anime.mal_id)"
                 class="btn-remove"
                 title="Eliminar de lista"
               >

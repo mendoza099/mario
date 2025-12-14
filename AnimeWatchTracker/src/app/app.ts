@@ -1,13 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CabeceraComponent } from './cabecera-component/cabecera-component';
+import { Cabecera } from './cabecera-component/cabecera-component';
 
 @Component({
   selector: 'app-root',
-  imports: [CabeceraComponent, RouterOutlet],
+  imports: [Cabecera, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('AnimeWatchTracker');
+export class Aplicacion {
+  protected readonly titulo = signal('AnimeWatchTracker');
 }

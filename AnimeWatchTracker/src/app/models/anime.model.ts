@@ -39,27 +39,27 @@ export interface Genre {
   url: string;
 }
 
-export interface AnimeDetail extends Anime {
+export interface DetalleAnime extends Anime {
   duration: string;
-  studios: Studio[];
-  producers: Producer[];
+  studios: Estudio[];
+  producers: Productor[];
 }
 
-export interface Studio {
+export interface Estudio {
   mal_id: number;
   type: string;
   name: string;
   url: string;
 }
 
-export interface Producer {
+export interface Productor {
   mal_id: number;
   type: string;
   name: string;
   url: string;
 }
 
-export interface Episode {
+export interface Episodio {
   mal_id: number;
   url: string;
   title: string;
@@ -72,7 +72,7 @@ export interface Episode {
   forum_url: string | null;
 }
 
-export interface Review {
+export interface Resena {
   mal_id: number;
   url: string;
   type: string;
@@ -96,7 +96,7 @@ export interface Review {
   };
 }
 
-export interface JikanResponse<T> {
+export interface RespuestaJikan<T> {
   data: T;
   pagination?: {
     last_visible_page: number;
@@ -110,12 +110,11 @@ export interface JikanResponse<T> {
   };
 }
 
-export type AnimeStatus = 'Pendiente' | 'Viendo' | 'Completado' | 'Abandonado';
+export type EstadoAnime = 'Pendiente' | 'Viendo' | 'Completado' | 'Abandonado';
 
-export interface MyAnimeListItem {
+export interface AnimeEnLista {
   anime: Anime;
-  status: AnimeStatus;
-  isFavorite: boolean;
-  personalScore?: number;
-  addedDate: string;
+  estado: EstadoAnime;
+  esFavorito: boolean;
+  fechaAgregado: string;
 }

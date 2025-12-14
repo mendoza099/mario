@@ -5,16 +5,16 @@
     <p class="subtitle">Combina filtros por nombre, formato, estado y clasificación para descubrir animes que se ajusten exactamente a tu mood</p>
   </div>
 
-  <form class="filters-form" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <form class="filters-form" [formGroup]="formulario" (ngSubmit)="alEnviar()">
     <div class="filters-grid">
       <div class="filter-field">
         <label>Nombre</label>
-        <input formControlName="username" placeholder="Ej: Naruto, One Piece...">
+        <input formControlName="nombre" placeholder="Ej: Naruto, One Piece...">
       </div>
       
       <div class="filter-field">
         <label>Tipo</label>
-        <select formControlName="opcionesTipo">
+        <select formControlName="tipo">
           <option value="1">Cualquiera</option>
           <option value="2">TV</option>
           <option value="3">Película</option>
@@ -25,7 +25,7 @@
 
       <div class="filter-field">
         <label>Estado</label>
-        <select formControlName="opcionesEstado">
+        <select formControlName="estado">
           <option value="1">Cualquiera</option>
           <option value="2">En emisión</option>
           <option value="3">Finalizado</option>
@@ -35,7 +35,7 @@
 
       <div class="filter-field">
         <label>Clasificación</label>
-        <select formControlName="opcionesClasificacion">
+        <select formControlName="clasificacion">
           <option value="1">Cualquiera</option>
           <option value="2">G - Todo público</option>
           <option value="3">PG - Niños</option>
@@ -58,7 +58,7 @@
 
       <div class="filter-field">
         <label>Ordenar por</label>
-        <select formControlName="opcionesOrdenar">
+        <select formControlName="ordenar">
           <option value="1">Sin ordenar</option>
           <option value="2">Puntuación</option>
           <option value="3">Popularidad</option>
@@ -70,7 +70,7 @@
 
       <div class="filter-field">
         <label>Dirección</label>
-        <select formControlName="opcionesDireccion">
+        <select formControlName="direccion">
           <option value="1">Por Defecto</option>
           <option value="2">Ascendente</option>
           <option value="3">Descendente</option>
@@ -79,24 +79,24 @@
     </div>
 
     <div class="form-actions">
-      <button type="button" (click)="onReset()" class="btn-reset">Limpiar Filtros</button>
+      <button type="button" (click)="alLimpiar()" class="btn-reset">Limpiar Filtros</button>
       <button type="submit" class="btn-submit">Buscar</button>
     </div>
   </form>
 
-  @if (loading()) {
+  @if (cargando()) {
     <div class="loading">
       <p>Buscando animes...</p>
     </div>
   }
 
-  @if (error() && !loading()) {
+  @if (error() && !cargando()) {
     <div class="error">
       <p>{{ error() }}</p>
     </div>
   }
 
-  @if (animes().length > 0 && !loading()) {
+  @if (animes().length > 0 && !cargando()) {
     <div class="results">
       <h2>Resultados ({{ animes().length }})</h2>
       <div class="anime-grid">

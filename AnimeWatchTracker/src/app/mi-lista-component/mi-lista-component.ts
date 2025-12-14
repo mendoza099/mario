@@ -1,53 +1,53 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MyListService } from '../services/my-list.service';
-import { MyAnimeListItem, AnimeStatus } from '../models/anime.model';
+import { ServicioMiLista } from '../services/my-list.service';
+import { AnimeEnLista, EstadoAnime } from '../models/anime.model';
 
-type FilterType = 'Todos' | 'Favoritos' | 'Pendiente' | 'Viendo' | 'Completado' | 'Abandonado';
+type TipoFiltro = 'Todos' | 'Favoritos' | 'Pendiente' | 'Viendo' | 'Completado' | 'Abandonado';
 
 @Component({
-  selector: 'app-mi-lista-component',
+  selector: 'app-mi-lista',
   imports: [RouterLink],
   templateUrl: './mi-lista-component.html',
   styleUrl: './mi-lista-component.css',
 })
-export class MiListaComponent {
-  myListService = inject(MyListService);
+export class MiLista {
+  servicioMiLista = inject(ServicioMiLista);
   
-  activeFilter = signal<FilterType>('Todos');
+  filtroActivo = signal<TipoFiltro>('Todos');
 
-  filteredList = computed(() => {
-    const filter = this.activeFilter();
-    const allItems = this.myListService.myList();
+  listaFiltrada = computed(() => {
+    const filtro = this.filtroActivo();
+    const todosLosAnimes = this.servicioMiLista.miLista();
 
-    if (filter === 'Todos') return allItems;
-    if (filter === 'Favoritos') return this.myListService.getFavorites();
-    return this.myListService.getByStatus(filter as AnimeStatus);
+    if (filtro === 'Todos') return todosLosAnimes;
+    if (filtro === 'Favoritos') return this.servicioMiLista.obtenerFavoritos();
+    return this.servicioMiLista.obtenerPorEstado(filtro as EstadoAnime);
   });
 
-  stats = computed(() => {
-    const list = this.myListService.myList();
+  estadisticas = computed(() => {
+    const lista = this.servicioMiLista.miLista();
     return {
-      total: list.length,
-      favoritos: this.myListService.getFavorites().length,
-      pendiente: this.myListService.getByStatus('Pendiente').length,
-      viendo: this.myListService.getByStatus('Viendo').length,
-      completado: this.myListService.getByStatus('Completado').length,
-      abandonado: this.myListService.getByStatus('Abandonado').length,
+      total: lista.length,
+      favoritos: this.servicioMiLista.obtenerFavoritos().length,
+      pendiente: this.servicioMiLista.obtenerPorEstado('Pendiente').length,
+      viendo: this.servicioMiLista.obtenerPorEstado('Viendo').length,
+      completado: this.servicioMiLista.obtenerPorEstado('Completado').length,
+      abandonado: this.servicioMiLista.obtenerPorEstado('Abandonado').length,
     };
   });
 
-  setFilter(filter: FilterType): void {
-    this.activeFilter.set(filter);
+  cambiarFiltro(filtro: TipoFiltro): void {
+    this.filtroActivo.set(filtro);
   }
 
-  removeAnime(malId: number): void {
+  eliminarAnime(idAnime: number): void {
     if (confirm('¿Estás seguro de eliminar este anime de tu lista?')) {
-      this.myListService.removeAnime(malId);
+      this.servicioMiLista.eliminarAnime(idAnime);
     }
   }
 
-  toggleFavorite(malId: number): void {
-    this.myListService.toggleFavorite(malId);
+  cambiarFavorito(idAnime: number): void {
+    this.servicioMiLista.cambiarFavorito(idAnime);
   }
 }

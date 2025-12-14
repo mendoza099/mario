@@ -10,22 +10,22 @@
     <div class="search-box">
       <input 
         type="text" 
-        [value]="searchQuery()"
-        (input)="updateQuery($event)"
-        (keyup.enter)="onSearch()"
+        [value]="busqueda()"
+        (input)="actualizarBusqueda($event)"
+        (keyup.enter)="alBuscar()"
         placeholder="Ej: Naruto, One Piece, Attack on Titan..."
         class="search-input"
       />
-      <button (click)="onSearch()" class="search-button">Buscar</button>
-      @if (searched()) {
-        <button (click)="clearSearch()" class="clear-button">Limpiar</button>
+      <button (click)="alBuscar()" class="search-button">Buscar</button>
+      @if (buscado()) {
+        <button (click)="limpiarBusqueda()" class="clear-button">Limpiar</button>
       }
     </div>
   </div>
 
   <div class="content-section">
     <div class="header-info">
-      @if (!searched()) {
+      @if (!buscado()) {
         <h2>Animes en Emisión</h2>
         <p class="subtitle-section">Los animes más populares que están actualmente en emisión</p>
       } @else {
@@ -34,19 +34,19 @@
       }
     </div>
 
-    @if (loading()) {
+    @if (cargando()) {
       <div class="loading">
         <p>Cargando animes...</p>
       </div>
     }
 
-    @if (error() && !loading()) {
+    @if (error() && !cargando()) {
       <div class="error">
         <p>{{ error() }}</p>
       </div>
     }
 
-    @if (animes().length > 0 && !loading()) {
+    @if (animes().length > 0 && !cargando()) {
       <div class="anime-grid">
         @for (anime of animes(); track anime.mal_id) {
           <a [routerLink]="['/anime', anime.mal_id]" class="anime-card">

@@ -1,72 +1,72 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AnimeService } from '../services/anime.service';
+import { ServicioAnime } from '../services/anime.service';
 import { Anime } from '../models/anime.model';
 
 @Component({
-  selector: 'app-buscador-component',
+  selector: 'app-buscador',
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './buscador-component.html',
   styleUrl: './buscador-component.css',
 })
-export class BuscadorComponent {
+export class Buscador {
   private fb = inject(FormBuilder);
-  private animeService = inject(AnimeService);
+  private servicioAnime = inject(ServicioAnime);
 
   animes = signal<Anime[]>([]);
-  loading = signal(false);
+  cargando = signal(false);
   error = signal('');
-  searched = signal(false);
+  buscado = signal(false);
 
-  profileForm = this.fb.nonNullable.group({
-    username: [''],
-    opcionesTipo: ['1'],
-    opcionesEstado: ['1'],
-    opcionesClasificacion: ['1'],
+  formulario = this.fb.nonNullable.group({
+    nombre: [''],
+    tipo: ['1'],
+    estado: ['1'],
+    clasificacion: ['1'],
     fechaInicio: [''],
     fechaFin: [''],
-    opcionesOrdenar: ['1'],
-    opcionesDireccion: ['1'],
+    ordenar: ['1'],
+    direccion: ['1'],
   });
 
-  onSubmit(): void {
-    this.loading.set(true);
+  alEnviar(): void {
+    this.cargando.set(true);
     this.error.set('');
-    this.searched.set(true);
+    this.buscado.set(true);
     this.animes.set([]);
 
-    const filters = this.profileForm.getRawValue();
+    const filtros = this.formulario.getRawValue();
 
-    this.animeService.searchAnimesAdvanced(filters).subscribe({
-      next: (response) => {
-        this.animes.set(response.data);
-        this.loading.set(false);
-        if (response.data.length === 0) {
+    this.servicioAnime.buscarAnimesAvanzado(filtros).subscribe({
+      next: (respuesta) => {
+        this.animes.set(respuesta.data);
+        this.cargando.set(false);
+        if (respuesta.data.length === 0) {
           this.error.set('No se encontraron resultados con estos filtros');
         }
       },
       error: (err) => {
         console.error('Error al buscar animes:', err);
         this.error.set('Error al buscar animes. Intenta nuevamente.');
-        this.loading.set(false);
+        this.cargando.set(false);
       }
     });
   }
 
-  onReset(): void {
-    this.profileForm.reset({
-      username: '',
-      opcionesTipo: '1',
-      opcionesEstado: '1',
-      opcionesClasificacion: '1',
+  alLimpiar(): void {
+    this.formulario.reset({
+      nombre: '',
+      tipo: '1',
+      estado: '1',
+      clasificacion: '1',
       fechaInicio: '',
       fechaFin: '',
-      opcionesOrdenar: '1',
-      opcionesDireccion: '1',
+      ordenar: '1',
+      direccion: '1',
     });
     this.animes.set([]);
     this.error.set('');
-    this.searched.set(false);
+    this.buscado.set(false);
   }
 }

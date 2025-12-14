@@ -3,44 +3,44 @@ import { Injectable, signal, effect } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class ThemeService {
-  private readonly STORAGE_KEY = 'animeWatchTracker_theme';
+export class ServicioTema {
+  private readonly CLAVE_ALMACENAMIENTO = 'animeWatchTracker_tema';
   
-  isDarkMode = signal<boolean>(false);
+  modoOscuro = signal<boolean>(false);
 
   constructor() {
-    this.loadTheme();
+    this.cargarTema();
     
     effect(() => {
-      const isDark = this.isDarkMode();
-      this.applyTheme(isDark);
-      this.saveTheme(isDark);
+      const esOscuro = this.modoOscuro();
+      this.aplicarTema(esOscuro);
+      this.guardarTema(esOscuro);
     });
   }
 
-  private loadTheme(): void {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    if (stored !== null) {
-      this.isDarkMode.set(stored === 'dark');
+  private cargarTema(): void {
+    const guardado = localStorage.getItem(this.CLAVE_ALMACENAMIENTO);
+    if (guardado !== null) {
+      this.modoOscuro.set(guardado === 'oscuro');
     } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      this.isDarkMode.set(prefersDark);
+      const prefiereOscuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.modoOscuro.set(prefiereOscuro);
     }
   }
 
-  private saveTheme(isDark: boolean): void {
-    localStorage.setItem(this.STORAGE_KEY, isDark ? 'dark' : 'light');
+  private guardarTema(esOscuro: boolean): void {
+    localStorage.setItem(this.CLAVE_ALMACENAMIENTO, esOscuro ? 'oscuro' : 'claro');
   }
 
-  private applyTheme(isDark: boolean): void {
-    if (isDark) {
+  private aplicarTema(esOscuro: boolean): void {
+    if (esOscuro) {
       document.body.classList.add('dark-theme');
     } else {
       document.body.classList.remove('dark-theme');
     }
   }
 
-  toggleTheme(): void {
-    this.isDarkMode.update(current => !current);
+  cambiarTema(): void {
+    this.modoOscuro.update(actual => !actual);
   }
 }

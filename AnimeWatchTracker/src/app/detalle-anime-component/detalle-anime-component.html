@@ -1,17 +1,17 @@
-@if (loading()) {
+@if (cargando()) {
   <div class="loading-container">
     <p>Cargando anime...</p>
   </div>
 }
 
-@if (error() && !loading()) {
+@if (error() && !cargando()) {
   <div class="error-container">
     <p>{{ error() }}</p>
     <a routerLink="/" class="back-button">Volver al inicio</a>
   </div>
 }
 
-@if (anime() && !loading()) {
+@if (anime() && !cargando()) {
   <div class="detalle-container">
     <div class="anime-header">
       <div class="anime-poster">
@@ -48,32 +48,32 @@
         </div>
 
         <div class="list-actions">
-          @if (!isInList()) {
+          @if (!estaEnLista()) {
             <div class="add-to-list">
-              <select (change)="onStatusChange($event)" [value]="selectedStatus()">
+              <select (change)="alCambiarEstado($event)" [value]="estadoSeleccionado()">
                 <option value="Pendiente">Pendiente</option>
                 <option value="Viendo">Viendo</option>
                 <option value="Completado">Completado</option>
                 <option value="Abandonado">Abandonado</option>
               </select>
-              <button (click)="addToList()" class="btn-primary">Añadir a Mi Lista</button>
+              <button (click)="agregarALista()" class="btn-primary">Añadir a Mi Lista</button>
             </div>
           } @else {
             <div class="manage-list">
-              <select (change)="onStatusChange($event)" [value]="selectedStatus()">
+              <select (change)="alCambiarEstado($event)" [value]="estadoSeleccionado()">
                 <option value="Pendiente">Pendiente</option>
                 <option value="Viendo">Viendo</option>
                 <option value="Completado">Completado</option>
                 <option value="Abandonado">Abandonado</option>
               </select>
               
-              <button (click)="toggleFavorite()" 
-                      [class.favorite]="isFavorite()"
+              <button (click)="cambiarFavorito()" 
+                      [class.favorite]="esFavorito()"
                       class="btn-favorite">
-                {{ isFavorite() ? '❤️ Favorito' : '🤍 Marcar favorito' }}
+                {{ esFavorito() ? '❤️ Favorito' : '🤍 Marcar favorito' }}
               </button>
               
-              <button (click)="removeFromList()" class="btn-danger">Eliminar de lista</button>
+              <button (click)="eliminarDeLista()" class="btn-danger">Eliminar de lista</button>
             </div>
           }
         </div>
@@ -84,19 +84,19 @@
       <div class="episodes-section">
         <h3>Episodios</h3>
         
-        @if (loadingEpisodes()) {
+        @if (cargandoEpisodios()) {
           <p class="loading-text">Cargando episodios...</p>
         }
         
-        @if (episodes().length > 0 && !loadingEpisodes()) {
+        @if (episodios().length > 0 && !cargandoEpisodios()) {
           <div class="episodes-list">
-            @for (episode of episodes(); track episode.mal_id) {
+            @for (episodio of episodios(); track episodio.mal_id) {
               <div class="episode-item">
-                <span class="episode-number">Ep. {{ episode.mal_id }}</span>
+                <span class="episode-number">Ep. {{ episodio.mal_id }}</span>
                 <div class="episode-info">
-                  <h4>{{ episode.title }}</h4>
-                  @if (episode.aired) {
-                    <span class="episode-date">{{ episode.aired }}</span>
+                  <h4>{{ episodio.title }}</h4>
+                  @if (episodio.aired) {
+                    <span class="episode-date">{{ episodio.aired }}</span>
                   }
                 </div>
               </div>
@@ -104,7 +104,7 @@
           </div>
         }
         
-        @if (episodes().length === 0 && !loadingEpisodes()) {
+        @if (episodios().length === 0 && !cargandoEpisodios()) {
           <p class="no-data">No hay episodios disponibles</p>
         }
       </div>
@@ -112,29 +112,29 @@
       <div class="reviews-section">
         <h3>Reseñas</h3>
         
-        @if (loadingReviews()) {
+        @if (cargandoResenas()) {
           <p class="loading-text">Cargando reseñas...</p>
         }
         
-        @if (reviews().length > 0 && !loadingReviews()) {
+        @if (resenas().length > 0 && !cargandoResenas()) {
           <div class="reviews-list">
-            @for (review of reviews(); track review.mal_id) {
+            @for (resena of resenas(); track resena.mal_id) {
               <div class="review-item">
                 <div class="review-header">
                   <div class="review-user">
-                    <img [src]="review.user.images.jpg.image_url" [alt]="review.user.username" />
-                    <span>{{ review.user.username }}</span>
+                    <img [src]="resena.user.images.jpg.image_url" [alt]="resena.user.username" />
+                    <span>{{ resena.user.username }}</span>
                   </div>
-                  <span class="review-score">⭐ {{ review.score }}/10</span>
+                  <span class="review-score">⭐ {{ resena.score }}/10</span>
                 </div>
-                <p class="review-text">{{ truncateText(review.review, 300) }}</p>
-                <a [href]="review.url" target="_blank" class="review-link">Leer más</a>
+                <p class="review-text">{{ recortarTexto(resena.review, 300) }}</p>
+                <a [href]="resena.url" target="_blank" class="review-link">Leer más</a>
               </div>
             }
           </div>
         }
         
-        @if (reviews().length === 0 && !loadingReviews()) {
+        @if (resenas().length === 0 && !cargandoResenas()) {
           <p class="no-data">No hay reseñas disponibles</p>
         }
       </div>

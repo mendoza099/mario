@@ -1,47 +1,47 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, delay } from 'rxjs';
-import { Anime, AnimeDetail, Episode, Review, JikanResponse } from '../models/anime.model';
+import { Anime, DetalleAnime, Episodio, Resena, RespuestaJikan } from '../models/anime.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AnimeService {
+export class ServicioAnime {
   private http = inject(HttpClient);
-  private apiUrl = 'https://api.jikan.moe/v4';
+  private urlApi = 'https://api.jikan.moe/v4';
 
-  searchAnimes(query: string): Observable<JikanResponse<Anime[]>> {
-    const params = new HttpParams().set('q', query).set('sfw', 'true');
-    return this.http.get<JikanResponse<Anime[]>>(`${this.apiUrl}/anime`, { params }).pipe(
+  buscarAnimes(texto: string): Observable<RespuestaJikan<Anime[]>> {
+    const parametros = new HttpParams().set('q', texto).set('sfw', 'true');
+    return this.http.get<RespuestaJikan<Anime[]>>(`${this.urlApi}/anime`, { params: parametros }).pipe(
       delay(500)
     );
   }
 
-  searchAnimesAdvanced(filters: any): Observable<JikanResponse<Anime[]>> {
-    let params = new HttpParams().set('sfw', 'true');
+  buscarAnimesAvanzado(filtros: any): Observable<RespuestaJikan<Anime[]>> {
+    let parametros = new HttpParams().set('sfw', 'true');
 
-    if (filters.username) {
-      params = params.set('q', filters.username);
+    if (filtros.nombre) {
+      parametros = parametros.set('q', filtros.nombre);
     }
-    if (filters.opcionesTipo && filters.opcionesTipo !== '1') {
+    if (filtros.tipo && filtros.tipo !== '1') {
       const tipos: { [key: string]: string } = {
         '2': 'tv',
         '3': 'movie',
         '4': 'ova',
         '5': 'special'
       };
-      params = params.set('type', tipos[filters.opcionesTipo]);
+      parametros = parametros.set('type', tipos[filtros.tipo]);
     }
-    if (filters.opcionesEstado && filters.opcionesEstado !== '1') {
+    if (filtros.estado && filtros.estado !== '1') {
       const estados: { [key: string]: string } = {
         '2': 'airing',
         '3': 'complete',
         '4': 'upcoming'
       };
-      params = params.set('status', estados[filters.opcionesEstado]);
+      parametros = parametros.set('status', estados[filtros.estado]);
     }
-    if (filters.opcionesClasificacion && filters.opcionesClasificacion !== '1') {
-      const ratings: { [key: string]: string } = {
+    if (filtros.clasificacion && filtros.clasificacion !== '1') {
+      const clasificaciones: { [key: string]: string } = {
         '2': 'g',
         '3': 'pg',
         '4': 'pg13',
@@ -49,9 +49,9 @@ export class AnimeService {
         '6': 'r',
         '7': 'rx'
       };
-      params = params.set('rating', ratings[filters.opcionesClasificacion]);
+      parametros = parametros.set('rating', clasificaciones[filtros.clasificacion]);
     }
-    if (filters.opcionesOrdenar && filters.opcionesOrdenar !== '1') {
+    if (filtros.ordenar && filtros.ordenar !== '1') {
       const ordenar: { [key: string]: string } = {
         '2': 'score',
         '3': 'popularity',
@@ -59,43 +59,43 @@ export class AnimeService {
         '5': 'title',
         '6': 'start_date'
       };
-      params = params.set('order_by', ordenar[filters.opcionesOrdenar]);
+      parametros = parametros.set('order_by', ordenar[filtros.ordenar]);
     }
-    if (filters.opcionesDireccion && filters.opcionesDireccion !== '1') {
+    if (filtros.direccion && filtros.direccion !== '1') {
       const direccion: { [key: string]: string } = {
         '2': 'asc',
         '3': 'desc'
       };
-      params = params.set('sort', direccion[filters.opcionesDireccion]);
+      parametros = parametros.set('sort', direccion[filtros.direccion]);
     }
 
-    return this.http.get<JikanResponse<Anime[]>>(`${this.apiUrl}/anime`, { params }).pipe(
+    return this.http.get<RespuestaJikan<Anime[]>>(`${this.urlApi}/anime`, { params: parametros }).pipe(
       delay(500)
     );
   }
 
-  getAnimeById(id: number): Observable<JikanResponse<AnimeDetail>> {
-    return this.http.get<JikanResponse<AnimeDetail>>(`${this.apiUrl}/anime/${id}`).pipe(
+  obtenerAnimePorId(id: number): Observable<RespuestaJikan<DetalleAnime>> {
+    return this.http.get<RespuestaJikan<DetalleAnime>>(`${this.urlApi}/anime/${id}`).pipe(
       delay(500)
     );
   }
 
-  getAnimeEpisodes(id: number, page: number = 1): Observable<JikanResponse<Episode[]>> {
-    const params = new HttpParams().set('page', page.toString());
-    return this.http.get<JikanResponse<Episode[]>>(`${this.apiUrl}/anime/${id}/episodes`, { params }).pipe(
+  obtenerEpisodios(id: number, pagina: number = 1): Observable<RespuestaJikan<Episodio[]>> {
+    const parametros = new HttpParams().set('page', pagina.toString());
+    return this.http.get<RespuestaJikan<Episodio[]>>(`${this.urlApi}/anime/${id}/episodes`, { params: parametros }).pipe(
       delay(500)
     );
   }
 
-  getAnimeReviews(id: number, page: number = 1): Observable<JikanResponse<Review[]>> {
-    const params = new HttpParams().set('page', page.toString());
-    return this.http.get<JikanResponse<Review[]>>(`${this.apiUrl}/anime/${id}/reviews`, { params }).pipe(
+  obtenerResenas(id: number, pagina: number = 1): Observable<RespuestaJikan<Resena[]>> {
+    const parametros = new HttpParams().set('page', pagina.toString());
+    return this.http.get<RespuestaJikan<Resena[]>>(`${this.urlApi}/anime/${id}/reviews`, { params: parametros }).pipe(
       delay(500)
     );
   }
 
-  getRandomAnime(): Observable<JikanResponse<Anime>> {
-    return this.http.get<JikanResponse<Anime>>(`${this.apiUrl}/random/anime`).pipe(
+  obtenerAnimeAleatorio(): Observable<RespuestaJikan<Anime>> {
+    return this.http.get<RespuestaJikan<Anime>>(`${this.urlApi}/random/anime`).pipe(
       delay(500)
     );
   }

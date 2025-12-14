@@ -1,101 +1,92 @@
 import { Injectable, signal } from '@angular/core';
-import { Anime, MyAnimeListItem, AnimeStatus } from '../models/anime.model';
+import { Anime, AnimeEnLista, EstadoAnime } from '../models/anime.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MyListService {
-  private readonly STORAGE_KEY = 'animeWatchTracker_myList';
+export class ServicioMiLista {
+  private readonly CLAVE_ALMACENAMIENTO = 'animeWatchTracker_miLista';
   
-  myList = signal<MyAnimeListItem[]>([]);
+  miLista = signal<AnimeEnLista[]>([]);
 
   constructor() {
-    this.loadFromStorage();
+    this.cargarDesdeAlmacenamiento();
   }
 
-  private loadFromStorage(): void {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    if (stored) {
+  private cargarDesdeAlmacenamiento(): void {
+    const guardado = localStorage.getItem(this.CLAVE_ALMACENAMIENTO);
+    if (guardado) {
       try {
-        const list = JSON.parse(stored);
-        this.myList.set(list);
+        const lista = JSON.parse(guardado);
+        this.miLista.set(lista);
       } catch (error) {
-        console.error('Error loading from localStorage:', error);
-        this.myList.set([]);
+        console.error('Error al cargar desde localStorage:', error);
+        this.miLista.set([]);
       }
     }
   }
 
-  private saveToStorage(): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.myList()));
+  private guardarEnAlmacenamiento(): void {
+    localStorage.setItem(this.CLAVE_ALMACENAMIENTO, JSON.stringify(this.miLista()));
   }
 
-  addAnime(anime: Anime, status: AnimeStatus = 'Pendiente'): void {
-    const currentList = this.myList();
-    const exists = currentList.find(item => item.anime.mal_id === anime.mal_id);
+  agregarAnime(anime: Anime, estado: EstadoAnime = 'Pendiente'): void {
+    const listaActual = this.miLista();
+    const existe = listaActual.find(item => item.anime.mal_id === anime.mal_id);
     
-    if (!exists) {
-      const newItem: MyAnimeListItem = {
+    if (!existe) {
+      const nuevoAnime: AnimeEnLista = {
         anime,
-        status,
-        isFavorite: false,
-        addedDate: new Date().toISOString()
+        estado,
+        esFavorito: false,
+        fechaAgregado: new Date().toISOString()
       };
-      this.myList.set([...currentList, newItem]);
-      this.saveToStorage();
+      this.miLista.set([...listaActual, nuevoAnime]);
+      this.guardarEnAlmacenamiento();
     }
   }
 
-  removeAnime(malId: number): void {
-    const currentList = this.myList();
-    this.myList.set(currentList.filter(item => item.anime.mal_id !== malId));
-    this.saveToStorage();
+  eliminarAnime(idAnime: number): void {
+    const listaActual = this.miLista();
+    this.miLista.set(listaActual.filter(item => item.anime.mal_id !== idAnime));
+    this.guardarEnAlmacenamiento();
   }
 
-  updateStatus(malId: number, status: AnimeStatus): void {
-    const currentList = this.myList();
-    const updated = currentList.map(item => 
-      item.anime.mal_id === malId ? { ...item, status } : item
+  actualizarEstado(idAnime: number, estado: EstadoAnime): void {
+    const listaActual = this.miLista();
+    const actualizada = listaActual.map(item => 
+      item.anime.mal_id === idAnime ? { ...item, estado } : item
     );
-    this.myList.set(updated);
-    this.saveToStorage();
+    this.miLista.set(actualizada);
+    this.guardarEnAlmacenamiento();
   }
 
-  toggleFavorite(malId: number): void {
-    const currentList = this.myList();
-    const updated = currentList.map(item => 
-      item.anime.mal_id === malId ? { ...item, isFavorite: !item.isFavorite } : item
+  cambiarFavorito(idAnime: number): void {
+    const listaActual = this.miLista();
+    const actualizada = listaActual.map(item => 
+      item.anime.mal_id === idAnime ? { ...item, esFavorito: !item.esFavorito } : item
     );
-    this.myList.set(updated);
-    this.saveToStorage();
+    this.miLista.set(actualizada);
+    this.guardarEnAlmacenamiento();
   }
 
-  updatePersonalScore(malId: number, score: number): void {
-    const currentList = this.myList();
-    const updated = currentList.map(item => 
-      item.anime.mal_id === malId ? { ...item, personalScore: score } : item
-    );
-    this.myList.set(updated);
-    this.saveToStorage();
+  estaEnLista(idAnime: number): boolean {
+    return this.miLista().some(item => item.anime.mal_id === idAnime);
   }
 
-  isInList(malId: number): boolean {
-    return this.myList().some(item => item.anime.mal_id === malId);
+  obtenerAnimeDeLista(idAnime: number): AnimeEnLista | undefined {
+    return this.miLista().find(item => item.anime.mal_id === idAnime);
   }
 
-  getAnimeFromList(malId: number): MyAnimeListItem | undefined {
-    return this.myList().find(item => item.anime.mal_id === malId);
+  obtenerPorEstado(estado: EstadoAnime): AnimeEnLista[] {
+    return this.miLista().filter(item => item.estado === estado);
   }
 
-  getByStatus(status: AnimeStatus): MyAnimeListItem[] {
-    return this.myList().filter(item => item.status === status);
+  obtenerFavoritos(): AnimeEnLista[] {
+    return this.miLista().filter(item => item.esFavorito);
   }
 
-  getFavorites(): MyAnimeListItem[] {
-    return this.myList().filter(item => item.isFavorite);
-  }
-
-  getAll(): MyAnimeListItem[] {
-    return this.myList();
+  obtenerTodos(): AnimeEnLista[] {
+    return this.miLista();
   }
 }
